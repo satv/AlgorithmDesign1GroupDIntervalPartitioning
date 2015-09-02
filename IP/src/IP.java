@@ -1,17 +1,9 @@
 
-import java.awt.geom.QuadCurve2D;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Scanner;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 /**
  *
  * @author Rene Anda Nielsen <rann@itu.dk>
@@ -25,10 +17,10 @@ public class IP {
     private static Interval[] intervals;
     private static Interval interval;
     
-    private static ArrayList<Integer> sortedIntervalIDs = new ArrayList();
+    private final static ArrayList<Integer> sortedIntervalIDs = new ArrayList();
         
     private static int d; // no of partitions
-    private static ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
+    private final static ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
 
     public static void main(String[] args) throws FileNotFoundException {
         IP ip = new IP();
@@ -63,21 +55,16 @@ public class IP {
 //            System.out.println(interval.start + " " + interval.end);
 //        }
         
-        
         // SORT lectures by start time so that s1 ≤ s2 ≤ ... ≤ sn.
-        
-        // #######################################
-        //Arrays.sort(intervals);
-        
-        
-        
+        //////Arrays.sort(intervals);
         
 //        System.out.println("Sorting order:\n");
 //        for(Interval i: intervals){
 //            System.out.println(i.start);
 //        }
         
-//####################################        
+//####################################      
+        // quicksort hint: use the interval.compareTo(Obj o) Method ;-)
         for(int i = 0; i < n; i++){ // this is O(n^n) !!!!!!! DANGER DANGER
             int smallestID = -1;
             int smallestVal = Integer.MAX_VALUE;
@@ -89,7 +76,7 @@ public class IP {
             }
             sortedIntervalIDs.add(smallestID);
         }
- //################################################################       
+ //###################################       
         
         // d <- 0
         d = 0;
@@ -115,7 +102,6 @@ public class IP {
             }
         }
         // RETURN schedule.
-        
         
         System.out.println("\nOutput:\n" + n + "\n");
         for(Interval i: intervals){
@@ -185,8 +171,8 @@ public class IP {
 
         @Override
         public int compareTo(Object o) {
-            if(this.start < ((Interval)o).start){ return -1;}
-            if(this.start > ((Interval)o).start){ return 1;} 
+            if(this.start < ((Interval)o).start){ return -1; }
+            if(this.start > ((Interval)o).start){ return 1; } 
             return 0;
         }
     }
