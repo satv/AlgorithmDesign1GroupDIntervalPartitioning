@@ -23,7 +23,6 @@ public class IP {
     private final static ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
 
     public static void main(String[] args) throws FileNotFoundException {
-        IP ip = new IP();
         File file = new File("ip-rand-1k.in");
         sc = new Scanner(file);
         //sc = new Scanner(System.in);
@@ -51,20 +50,12 @@ public class IP {
                 id++;
             }
         }
-//        for (Interval interval : intervals) {
-//            System.out.println(interval.start + " " + interval.end);
-//        }
         
         // SORT lectures by start time so that s1 ≤ s2 ≤ ... ≤ sn.
-        //////Arrays.sort(intervals);
-        
-//        System.out.println("Sorting order:\n");
-//        for(Interval i: intervals){
-//            System.out.println(i.start);
-//        }
-        
-//####################################      
-        // quicksort hint: use the interval.compareTo(Obj o) Method ;-)
+        //////Arrays.sort(intervals);        
+//####################################
+        // quicksort maybe use the interval.compareTo(Obj o) Method?
+        // you need to init the sortedIntervalIDs with 1..n values!
         for(int i = 0; i < n; i++){ // this is O(n^n) !!!!!!! DANGER DANGER
             int smallestID = -1;
             int smallestVal = Integer.MAX_VALUE;
@@ -76,7 +67,7 @@ public class IP {
             }
             sortedIntervalIDs.add(smallestID);
         }
- //###################################       
+ //###################################
         
         // d <- 0
         d = 0;
@@ -146,6 +137,7 @@ public class IP {
                         intervals[other].start < interval.end)
                     ){ 
                     noOverlaping = false;
+                    break;
                 }
             }
             if(noOverlaping){
