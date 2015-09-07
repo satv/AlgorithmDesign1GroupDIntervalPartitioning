@@ -14,19 +14,18 @@ import java.util.Scanner;
 public class IP {
 
     private static Scanner sc;
-    
     private static int n; // number of intervals
     private static Interval[] intervals;
-        
     private static int d; // number of partitions
     private static final Comparator<Integer> shortestIntervalEndComparator = new Comparator<Integer>(){
+        @Override
         public int compare(Integer o1, Integer o2) {
             Integer i1 = intervals[partitionIntervals.get(o1).get(partitionIntervals.get(o1).size()-1)].end;
             Integer i2 = intervals[partitionIntervals.get(o2).get(partitionIntervals.get(o2).size()-1)].end;
             return i1.compareTo(i2);
         }
     };
-    private static PriorityQueue<Integer> shortestIntervalEnd = new PriorityQueue(shortestIntervalEndComparator);
+    private static final PriorityQueue<Integer> shortestIntervalEnd = new PriorityQueue(shortestIntervalEndComparator);
     private static final ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -85,7 +84,7 @@ public class IP {
             }
             //// taking care of k
             if(shortestIntervalEnd.peek() == compatibleID)
-                shortestIntervalEnd.add(shortestIntervalEnd.poll()); // Damn Magic! 
+                shortestIntervalEnd.add(shortestIntervalEnd.poll()); // recalculate
             else
                 shortestIntervalEnd.add( d - 1 );
         }
@@ -95,9 +94,8 @@ public class IP {
         Arrays.sort(intervals);
         
         System.out.println("\nOutput:\n" + d + "\n");
-        for(Interval i: intervals){
+        for(Interval i: intervals)
             System.out.println(i.start + " " + i.end + " " + i.partition);
-        }
     }
     
     /**
@@ -119,7 +117,7 @@ public class IP {
         public int start;
         public int end;
         public int partition;        
-        public String comparator;
+        public String comparator; // value: "sort by start time" or "sort by id"
 
         public Interval(int id, int start, int end, String comparator) {
             this.id = id;
