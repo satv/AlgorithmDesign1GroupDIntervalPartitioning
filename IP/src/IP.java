@@ -1,4 +1,3 @@
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,7 +8,7 @@ import java.util.Scanner;
 /**
  * @author Rene Anda Nielsen <rann@itu.dk>
  * @author Aaron Gornott <agor@itu.dk>
- * @author Sarah
+ * @author Sarah de Voss <satv@itu.dk>
  */
 public class IP {
 
@@ -29,8 +28,8 @@ public class IP {
     private static final ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
 
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("ip-rand-1M.in");
-        sc = new Scanner(file);
+        // File file = new File("ip-rand-1M.in"); sc = new Scanner(file);
+        sc = new Scanner(System.in);
         int id = 0;
         int lineNr = 0;
         // read file
@@ -41,7 +40,6 @@ public class IP {
             }
             if (lineNr == 0) {
                 n = Integer.parseInt(line);
-                System.out.println("N is: " + n);
                 intervals = new Interval[n];
                 lineNr++;
             } else {
@@ -93,7 +91,7 @@ public class IP {
             i.comparator = "sort by id";
         Arrays.sort(intervals);
         
-        System.out.println("\nOutput:\n" + d + "\n");
+        System.out.println(d + "\n");
         for(Interval i: intervals)
             System.out.println(i.start + " " + i.end + " " + i.partition);
     }
