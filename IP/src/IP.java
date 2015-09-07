@@ -2,12 +2,14 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
  *
  * @author Rene Anda Nielsen <rann@itu.dk>
  * @author Aaron Gornott <agor@itu.dk>
+ * @author Sarah
  */
 public class IP {
 
@@ -17,7 +19,7 @@ public class IP {
     private static Interval[] intervals;
     private static Interval interval;
     
-    private final static ArrayList<Integer> sortedIntervalIDs = new ArrayList();
+    //private final static ArrayList<Integer> sortedIntervalIDs = new ArrayList();
         
     private static int d; // no of partitions
     private final static ArrayList<ArrayList<Integer>> partitionIntervals = new ArrayList();
@@ -25,7 +27,6 @@ public class IP {
     public static void main(String[] args) throws FileNotFoundException {
         File file = new File("ip-rand-1k.in");
         sc = new Scanner(file);
-        //sc = new Scanner(System.in);
         int id = 0;
         int lineNr = 0;
         // read file
@@ -45,54 +46,41 @@ public class IP {
                 String[] times = line.split(" ");
                 int start = Integer.parseInt(times[0]);
                 int end = Integer.parseInt(times[1]);
-                interval = new Interval(id, start,end );
+                interval = new Interval(id, start,end, "sort by start time");
                 intervals[id] = interval;
                 id++;
             }
         }
         
         // SORT lectures by start time so that s1 ≤ s2 ≤ ... ≤ sn.
-        //////Arrays.sort(intervals);        
-//####################################
-        // quicksort maybe use the interval.compareTo(Obj o) Method?
-        // you need to init the sortedIntervalIDs with 1..n values!
-        for(int i = 0; i < n; i++){ // this is O(n^n) !!!!!!! DANGER DANGER
-            int smallestID = -1;
-            int smallestVal = Integer.MAX_VALUE;
-            for(int j = 0; j < n; j++){                
-                if(intervals[j].start < smallestVal && !sortedIntervalIDs.contains(j)){
-                    smallestVal = intervals[j].start;
-                    smallestID = j;
-                }                            
-            }
-            sortedIntervalIDs.add(smallestID);
-        }
- //###################################
-        
+        Arrays.sort(intervals);    
         // d <- 0
         d = 0;
         // FOR j = 1 TO n
         for(int j = 0; j < n; j++){
             // IF lecture j is compatible with some classroom
-            int sortedJ = sortedIntervalIDs.get(j);
-            int compatibleID = isCompatible(intervals[sortedJ], partitionIntervals);
+            //// int sortedJ = sortedIntervalIDs.get(j);
+            int compatibleID = isCompatible(intervals[j], partitionIntervals);
             if(compatibleID != -1){
                 // Schedule lecture j in any such classroom k. 
-                partitionIntervals.get(compatibleID).add(sortedJ);
-                intervals[sortedJ].partition = compatibleID;
+                partitionIntervals.get(compatibleID).add(j);
+                intervals[j].partition = compatibleID;
             }
             // ELSE
             else{
                 // Allocate a new classroom d + 1.                
                 partitionIntervals.add(new ArrayList());
                 // Schedule lecture j in classroom d + 1.
-                partitionIntervals.get(d).add(sortedJ);
-                intervals[sortedJ].partition = d;
+                partitionIntervals.get(d).add(j);
+                intervals[j].partition = d;
                 // d <- d + 1
                 d++;
             }
         }
         // RETURN schedule.
+        for(Interval i: intervals)
+            i.comparator = "sort by id";
+        Arrays.sort(intervals);
         
         System.out.println("\nOutput:\n" + n + "\n");
         for(Interval i: intervals){
@@ -150,22 +138,32 @@ public class IP {
 
     private static class Interval implements Comparable{
 
-        int id;
-        int start;
-        int end;
-        int partition;
+        public int id;
+        public int start;
+        public int end;
+        public int partition;        
+        public String comparator;
 
-        public Interval(int id, int start, int end) {
+        public Interval(int id, int start, int end, String comparator) {
             this.id = id;
             this.start = start;
             this.end = end;
+            this.comparator = comparator;
         }
 
         @Override
         public int compareTo(Object o) {
-            if(this.start < ((Interval)o).start){ return -1; }
-            if(this.start > ((Interval)o).start){ return 1; } 
-            return 0;
+            if(comparator.compareTo("sort by start time") == 0){
+                if(this.start < ((Interval)o).start){ return -1; }
+                if(this.start > ((Interval)o).start){ return 1; } 
+                return 0;
+            }
+            if(comparator.compareTo("sort by id") == 0){
+                if(this.id < ((Interval)o).id){ return -1; }
+                if(this.id > ((Interval)o).id){ return 1; } 
+                return 0;
+            }
+            throw new IllegalArgumentException("Your comparator is not valid!");
         }
     }
 }
